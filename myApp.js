@@ -11,7 +11,7 @@ const Person = mongoose.model('Person', personSchema)
 
 const createAndSavePerson = (done) => {
   const tazeRussel = new Person ({
-    name: "Mary",
+    name: "Charles Taze Russel ",
     age: 78,
     favoriteFoods: ["eggs", "fish", "fresh fruit"]
   })
@@ -82,7 +82,7 @@ const removeById = (personId, done) => {
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-  Person.remove({name: nameToRemove}, (err, response)=>{
+  Person.deleteMany({name: nameToRemove}, (err, response)=>{
     if(err) return console.error(err);
     done(null, response);
   })
@@ -90,8 +90,14 @@ const removeManyPeople = (done) => {
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({ favoriteFoods: foodToSearch })
+  .sort({ name: 1 })
+  .limit(2)
+  .select({ age: 0 })
+  .exec(function(err, people){
+    if(err) return console.error(err)
+    done(null, people);
+  })
 };
 
 /** **Well Done !!**
